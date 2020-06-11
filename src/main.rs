@@ -1,7 +1,7 @@
 use {
     anyhow::Error as AnyhowError,
     env_logger::{init_from_env, Env},
-    log::{debug, info},
+    log::info,
 };
 
 pub(crate) mod util {
@@ -230,14 +230,14 @@ mod devices {
                 cbSize,
                 ClassGuid,
                 DevInst,
-                Reserved: _,
+                Reserved,
             }) = self;
 
             f.debug_struct("DeviceInfo")
                 .field("cbSize", cbSize)
                 .field("ClassGuid", &Guid(ClassGuid.clone()))
                 .field("DevInst", &DebugAs(|f| write!(f, "{:08X}", DevInst)))
-                .field("Reserved", &"...")
+                .field("Reserved", &DebugAs(|f| write!(f, "{:p}", Reserved)))
                 .finish()
         }
     }
@@ -278,10 +278,12 @@ use devices::*;
 fn main() -> Result<(), AnyhowError> {
     init_from_env(Env::new().default_filter_or("nzxt_interview=info"));
 
-    info!("Checking out USB devices...");
+    info!("Checking out present USB devices...");
     let device_info_set = unsafe {
         DeviceInfoSet::get_devices_of_class(
-            DeviceClassFilter::all().enumerator(Some(PlugNPlayEnumeratorIdentifier::Usb)),
+            DeviceClassFilter::all()
+                .enumerator(Some(PlugNPlayEnumeratorIdentifier::Usb))
+                .present_devices(true),
         )?
     };
 
