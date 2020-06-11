@@ -7,7 +7,6 @@ edition = "2018"
 [dependencies]
 winapi = { version = "0.3.8", features = ["handleapi", "setupapi"] }
 anyhow = "1.0.31"
-thiserror = "1.0.19"
 log = "0.4.8"
 env_logger = "0.7.1"
 wide-str = "0.1.0"

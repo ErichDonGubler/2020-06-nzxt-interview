@@ -49,7 +49,6 @@ mod devices {
             mem::{size_of, MaybeUninit},
             ptr::{null, null_mut},
         },
-        thiserror::Error as ThisError,
         wide_str::wide_str,
         winapi::{
             shared::{
@@ -177,9 +176,6 @@ mod devices {
             }
         }
     }
-
-    #[derive(Debug, ThisError)]
-    pub enum GetDevicesOfClassError {}
 
     impl DeviceInfoSet {
         /// TODO: Prove that this is a safe interface!
